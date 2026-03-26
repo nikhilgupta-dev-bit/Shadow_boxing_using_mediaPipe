@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Shadow Boxing Tracker – MediaPipe JS</title>
-  <meta name="description" content="Real-time shadow boxing punch detection using MediaPipe Pose in the browser. Track punches, combos, and performance live from your webcam." />
+  <title>PunchPulse – Real-Time Punch Tracker</title>
+  <meta name="description" content="PunchPulse: Real-time shadow boxing punch detection in the browser using MediaPipe Pose. Track punches, combos, PPM, and performance live from your webcam." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
   <div id="app">
     <!-- Header -->
@@ -16,7 +18,7 @@
       <div class="header-inner">
         <div class="logo">
           <span class="logo-icon">🥊</span>
-          <span class="logo-text">Shadow<span class="accent">Box</span></span>
+          <span class="logo-text">Punch<span class="accent">Pulse</span></span>
         </div>
         <div class="header-controls">
           <button id="btn-reset" class="btn btn-ghost" title="Reset session stats">↺ Reset</button>
@@ -27,7 +29,6 @@
 
     <!-- Main layout -->
     <main id="main">
-
       <!-- Left stats panel -->
       <aside id="stats-panel">
         <div class="panel-title">Session Stats</div>
@@ -111,7 +112,7 @@
           <div id="overlay" class="overlay">
             <div class="overlay-content">
               <div class="overlay-icon">🥊</div>
-              <h2>Shadow Boxing Tracker</h2>
+              <h2>PunchPulse</h2>
               <p>Click <strong>Start Camera</strong> to begin your session.<br/>Allow webcam access when prompted.</p>
               <button id="btn-start-center" class="btn btn-primary btn-large">▶ Start Session</button>
             </div>
@@ -135,4 +136,5 @@
 
   <script src="app.js"></script>
 </body>
+
 </html>

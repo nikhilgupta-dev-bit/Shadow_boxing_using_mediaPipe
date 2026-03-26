@@ -78,6 +78,9 @@ function makeStats() {
   };
 }
 
+// Decay timer — resets combo display to 0 after the combo window expires
+let comboDecayTimer = null;
+
 function registerPunch(stats, side, tNow) {
   stats.total++;
   if (side === 'left') stats.left++; else stats.right++;
@@ -89,6 +92,12 @@ function registerPunch(stats, side, tNow) {
   }
   stats.bestCombo = Math.max(stats.bestCombo, stats.combo);
   stats.lastPunchT = tNow;
+
+  // Reset combo to 0 after the window expires with no follow-up punch
+  clearTimeout(comboDecayTimer);
+  comboDecayTimer = setTimeout(() => {
+    stats.combo = 0;
+  }, THRESH.comboWindow * 1000);
 }
 
 function punchesPerMinute(stats, tNow) {
@@ -429,6 +438,8 @@ function stopCamera() {
 }
 
 function resetSession() {
+  clearTimeout(comboDecayTimer);
+  comboDecayTimer = null;
   analyzer = makeAnalyzer();
   prevTotal = 0;
   updateStats(analyzer.stats, fps, { left: 0, right: 0 }, performance.now() / 1000);
