@@ -129,6 +129,61 @@
     </main>
   </div>
 
+  <!-- Session Summary Modal -->
+  <div id="summary-modal" class="summary-modal hidden" role="dialog" aria-modal="true" aria-labelledby="summary-title">
+    <div class="summary-backdrop" id="summary-backdrop"></div>
+    <div class="summary-card">
+
+      <div class="summary-header">
+        <div class="summary-trophy">🏆</div>
+        <h2 class="summary-title" id="summary-title">Session Complete</h2>
+        <p class="summary-subtitle" id="summary-subtitle">Here's your performance breakdown.</p>
+      </div>
+
+      <div class="summary-grid">
+        <div class="summary-stat-block">
+          <div class="summary-stat-label">Duration</div>
+          <div class="summary-stat-value" id="sum-duration">0:00</div>
+        </div>
+        <div class="summary-stat-block">
+          <div class="summary-stat-label">Total Punches</div>
+          <div class="summary-stat-value sum-accent" id="sum-total">0</div>
+        </div>
+        <div class="summary-stat-block">
+          <div class="summary-stat-label">Best Combo 🏆</div>
+          <div class="summary-stat-value sum-gold" id="sum-best">0</div>
+        </div>
+        <div class="summary-stat-block">
+          <div class="summary-stat-label">Avg PPM</div>
+          <div class="summary-stat-value sum-purple" id="sum-ppm">0.0</div>
+        </div>
+      </div>
+
+      <!-- Left / Right split bar -->
+      <div class="summary-split-section">
+        <div class="split-header">
+          <span class="split-side-label left-split-label">Left <strong id="sum-left">0</strong></span>
+          <span class="split-title">Punch Split</span>
+          <span class="split-side-label right-split-label"><strong id="sum-right">0</strong> Right</span>
+        </div>
+        <div class="split-bar-track">
+          <div class="split-bar-left" id="sum-left-bar"></div>
+          <div class="split-bar-right" id="sum-right-bar"></div>
+        </div>
+        <div class="split-pct-row">
+          <span id="sum-left-pct">–</span>
+          <span id="sum-right-pct">–</span>
+        </div>
+      </div>
+
+      <div class="summary-actions">
+        <button id="sum-new-session" class="btn btn-primary btn-large">▶ New Session</button>
+        <button id="sum-close" class="btn btn-ghost">✕ Dismiss</button>
+      </div>
+
+    </div>
+  </div>
+
   <!-- MediaPipe CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>

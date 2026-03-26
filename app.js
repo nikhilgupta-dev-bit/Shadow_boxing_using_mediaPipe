@@ -421,13 +421,66 @@ function startCamera() {
   });
 }
 
+function formatDuration(seconds) {
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${m}:${s.toString().padStart(2, '0')}`;
+}
+
+function showSummary(stats, tNow) {
+  const modal = el('summary-modal');
+  const duration = tNow - stats.startedAt;
+  const total = stats.total;
+
+  // Populate header message
+  const subtitle = el('summary-subtitle');
+  if (total === 0) {
+    subtitle.textContent = 'No punches detected this session. Give it another go!';
+  } else if (stats.bestCombo >= 5) {
+    subtitle.textContent = `Incredible session! ${stats.bestCombo}-punch combo! 🔥`;
+  } else {
+    subtitle.textContent = `Great work! Here's your performance breakdown.`;
+  }
+
+  // Stats
+  el('sum-duration').textContent = formatDuration(duration);
+  el('sum-total').textContent    = total;
+  el('sum-best').textContent     = stats.bestCombo;
+  el('sum-ppm').textContent      = punchesPerMinute(stats, tNow).toFixed(1);
+  el('sum-left').textContent     = stats.left;
+  el('sum-right').textContent    = stats.right;
+
+  // Split bar
+  const leftPct  = total > 0 ? Math.round((stats.left  / total) * 100) : 50;
+  const rightPct = total > 0 ? Math.round((stats.right / total) * 100) : 50;
+  el('sum-left-pct').textContent  = `${leftPct}%`;
+  el('sum-right-pct').textContent = `${rightPct}%`;
+
+  // Animate bar after a short delay so CSS transition fires
+  const leftBar  = el('sum-left-bar');
+  const rightBar = el('sum-right-bar');
+  leftBar.style.width  = '0%';
+  rightBar.style.width = '0%';
+  modal.classList.remove('hidden');
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    leftBar.style.width  = `${leftPct}%`;
+    rightBar.style.width = `${rightPct}%`;
+  }));
+}
+
+function hideSummary() {
+  el('summary-modal').classList.add('hidden');
+}
+
 function stopCamera() {
+  const tNow = performance.now() / 1000;
+  const hadPunches = analyzer.stats.total > 0;
+
   if (camera) {
     camera.stop();
     camera = null;
   }
   poseRunning = false;
-  el('overlay').classList.remove('hidden');
   el('btn-start').textContent = '▶ Start Camera';
   el('btn-start').onclick = startCamera;
   el('pose-indicator').className = 'pose-indicator off';
@@ -435,6 +488,12 @@ function stopCamera() {
 
   // Clear canvas
   ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
+
+  if (hadPunches) {
+    showSummary(analyzer.stats, tNow);
+  } else {
+    el('overlay').classList.remove('hidden');
+  }
 }
 
 function resetSession() {
@@ -467,3 +526,20 @@ bindSlider('tune-ang', 'ang-val', 'elbowAngle', 0);
 el('btn-start').addEventListener('click', startCamera);
 el('btn-start-center').addEventListener('click', startCamera);
 el('btn-reset').addEventListener('click', resetSession);
+
+// Summary modal buttons
+el('sum-new-session').addEventListener('click', () => {
+  hideSummary();
+  resetSession();
+  startCamera();
+});
+
+el('sum-close').addEventListener('click', () => {
+  hideSummary();
+  el('overlay').classList.remove('hidden');
+});
+
+el('summary-backdrop').addEventListener('click', () => {
+  hideSummary();
+  el('overlay').classList.remove('hidden');
+});
