@@ -1,76 +1,102 @@
-# 🥊 Shadow Boxing AI Coach
+# 🥊 Shadow Boxing Tracker
 
-An advanced real-time Computer Vision application that tracks your shadow boxing performance, detects punches, and provides active coaching feedback using **MediaPipe** and **OpenCV**.
+A real-time web-based shadow boxing punch detector powered by **MediaPipe Pose JS** — running entirely in the browser. No installations, no Python, no backend. Just open and box! 
 
-![Aesthetics Placeholder](https://img.shields.io/badge/AI-Coach-FFD700?style=for-the-badge&logo=google-ai&logoColor=black)
-![Aesthetics Placeholder](https://img.shields.io/badge/OpenCV-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white)
-![Aesthetics Placeholder](https://img.shields.io/badge/MediaPipe-00C0FF?style=for-the-badge&logo=google&logoColor=white)
+![MediaPipe](https://img.shields.io/badge/MediaPipe-00C0FF?style=for-the-badge&logo=google&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+
+---
 
 ## ✨ Features
 
-### 🧠 AI Coaching System
-- **Guard Detection**: Real-time monitoring of hand positions. Alerts you with `"KEEP YOUR HANDS UP!"` if your guard drops below nose level.
-- **Punch Quality (Extension Check)**: Analyzes the physics of every punch.
-  - 🌟 **EXCELLENT**: Full, crisp extension.
-  - ✅ **GOOD**: Solid standard reach.
-  - ⚠️ **SHORT**: Warns you to reach further for better snap.
+### 🧠 Pose-Based Punch Detection
+- **Physics-based algorithm**: detects punches using wrist velocity, arm extension, extension delta, and elbow angle — all normalized to your body proportions
+- **Left / Right hand tracking**: independently tracks each hand with a per-hand cooldown (280 ms)
+- **Double punch**: detects simultaneous left + right throws
 
-### 📊 Real-Time Metrics
-- **PPM (Punches Per Minute)**: Tracks your intensity and cardio output.
-- **Combo Counter**: Detects consecutive strikes within a 1.2s window.
-- **Best Combo**: Records your highest streak during the session.
-- **Dynamic Angles**: Real-time display of elbow angles to ensure proper form.
+### 📊 Real-Time Session Stats
+- **Total Punches** — cumulative count for the session
+- **Left / Right** — breakdown by hand
+- **PPM** (Punches Per Minute) — tracks your cardio intensity
+- **Combo Counter** — consecutive punches within a 1.2 s window
+- **Best Combo 🏆** — highest streak of the session
+- **Live Elbow Angles** — real-time L/R elbow angle display for form feedback
 
-### 🛠 Technical Highlights
-- **Dynamic Scaling**: The system automatically scales detection thresholds based on your distance from the camera (using torso-to-shoulder ratio).
-- **Physics-Based Velocity**: Distinguishes between intentional punches and general movement using wrist velocity and acceleration deltas.
+### 🎛 Detection Tuning (Live Sliders)
+Adjust thresholds on-the-fly without reloading:
+- **Velocity threshold** — minimum wrist speed to register a punch
+- **Extension minimum** — how far your arm must reach relative to shoulder width
+- **Elbow angle minimum** — minimum elbow straightness (degrees)
+
+### 🎨 Premium Dark UI
+- Glassmorphism dark theme with accent glow effects
+- Live skeleton overlay drawn on canvas
+- Per-punch edge flash (green = left, red = right, cyan = double)
+- Animated combo/event label on screen
+- Fully responsive — works on tablets too
 
 ---
 
 ## 🚀 Getting Started
 
-### Prerequisites
-- Python 3.8+
-- Webcam
+### Option A — Open directly in browser (simplest)
+> **Requires a local server** because MediaPipe loads WASM files via fetch.  
+> Simply double-clicking `index.html` will NOT work.
 
-### Installation
-
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/nikhilgupta-dev-bit/Shadow_boxing_using_mediaPipe.git
-   cd Shadow_boxing_using_mediaPipe
-   ```
-
-2. **Set up Virtual Environment** (Recommended):
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # On macOS/Linux
-   ```
-
-3. **Install Dependencies**:
-   ```bash
-   pip install opencv-python mediapipe numpy
-   ```
-
-### 🥊 Usage
-
-Run the app using the provided script:
 ```bash
-./run.sh
+# Using Node (npx serve — no install needed)
+npx serve . -l 3000
+# Then open http://localhost:3000
 ```
 
-**Controls**:
-- `q`: Quit the application.
-- `r`: Reset session statistics.
+### Option B — Use the npm script
+```bash
+npm start
+# Opens at http://localhost:3000
+```
 
-**CLI Options**:
-- `--camera`: Specify camera index (default: 0).
-- `--min-detect`: Minimum detection confidence (default: 0.6).
+### Option C — Live deployment (recommended)
+The app is deployed on **GitHub Pages**:  
+👉 **[https://nikhilgupta-dev-bit.github.io/Shadow_boxing_using_mediaPipe](https://nikhilgupta-dev-bit.github.io/Shadow_boxing_using_mediaPipe)**
+
+> Webcam access requires **HTTPS** — GitHub Pages provides this automatically.
 
 ---
 
-## 📸 interface Preview
-The UI features a high-visibility dark overlay, real-time landmark tracking, and color-coded coaching feedback to keep you focused on your form.
+## 🛠 How It Works
+
+The detection pipeline mirrors the original Python `shadow_boxing_cv.py` logic, ported to JavaScript:
+
+| Step | What it does |
+|---|---|
+| **MediaPipe Pose** | Detects 33 body landmarks from the webcam feed at 30 fps |
+| **Torso scaling** | Normalizes all distances by shoulder-width to handle any distance from camera |
+| **Velocity check** | Wrist speed (normalized) must exceed the velocity threshold |
+| **Extension check** | Wrist-to-shoulder distance / shoulder-width must exceed the extension threshold |
+| **Delta check** | Arm must be actively extending (not retracting) |
+| **Elbow angle check** | Elbow must be sufficiently straight (> angle threshold) |
+| **Cooldown** | 280 ms cooldown per hand prevents double-counting a single punch |
+
+All thresholds are tunable in real-time via the sidebar sliders.
+
+---
+
+## 📁 Project Structure
+
+```
+Shadow_boxing/
+├── index.html          # App shell & layout
+├── app.js              # MediaPipe integration + punch detection logic
+├── style.css           # Dark theme UI styles
+├── package.json        # npm scripts (serve)
+├── shadow_boxing_cv.py # Original Python/OpenCV version (reference)
+└── run.sh              # Script to run the Python version
+```
+
+---
 
 ## 📜 License
-Distibuted under the MIT License. See `LICENSE` for more information.
+
+Distributed under the MIT License.

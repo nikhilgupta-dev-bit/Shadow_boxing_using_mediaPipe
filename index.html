@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shadow Boxing Tracker – MediaPipe JS</title>
+  <meta name="description" content="Real-time shadow boxing punch detection using MediaPipe Pose in the browser. Track punches, combos, and performance live from your webcam." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header id="header">
+      <div class="header-inner">
+        <div class="logo">
+          <span class="logo-icon">🥊</span>
+          <span class="logo-text">Shadow<span class="accent">Box</span></span>
+        </div>
+        <div class="header-controls">
+          <button id="btn-reset" class="btn btn-ghost" title="Reset session stats">↺ Reset</button>
+          <button id="btn-start" class="btn btn-primary">▶ Start Camera</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main layout -->
+    <main id="main">
+
+      <!-- Left stats panel -->
+      <aside id="stats-panel">
+        <div class="panel-title">Session Stats</div>
+
+        <div class="stat-card card-total">
+          <div class="stat-label">Total Punches</div>
+          <div class="stat-value" id="stat-total">0</div>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-card card-left">
+            <div class="stat-label">Left</div>
+            <div class="stat-value" id="stat-left">0</div>
+          </div>
+          <div class="stat-card card-right">
+            <div class="stat-label">Right</div>
+            <div class="stat-value" id="stat-right">0</div>
+          </div>
+        </div>
+
+        <div class="stat-card card-combo">
+          <div class="stat-label">Current Combo</div>
+          <div class="stat-value combo-value" id="stat-combo">0</div>
+        </div>
+
+        <div class="stat-card card-best">
+          <div class="stat-label">Best Combo 🏆</div>
+          <div class="stat-value best-value" id="stat-best">0</div>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-card card-ppm">
+            <div class="stat-label">PPM</div>
+            <div class="stat-value ppm-value" id="stat-ppm">0.0</div>
+          </div>
+          <div class="stat-card card-fps">
+            <div class="stat-label">FPS</div>
+            <div class="stat-value fps-value" id="stat-fps">0</div>
+          </div>
+        </div>
+
+        <div class="angle-section">
+          <div class="angle-label">Elbow Angles</div>
+          <div class="angle-row">
+            <div class="angle-item">
+              <span class="angle-side left-side">L</span>
+              <span id="angle-left">–</span>°
+            </div>
+            <div class="angle-item">
+              <span class="angle-side right-side">R</span>
+              <span id="angle-right">–</span>°
+            </div>
+          </div>
+        </div>
+
+        <div class="thresholds-section">
+          <div class="panel-title small">Detection Tuning</div>
+          <label class="tune-label">Velocity threshold <span id="vel-val">3.2</span>
+            <input type="range" id="tune-vel" min="1.0" max="6.0" step="0.1" value="3.2" />
+          </label>
+          <label class="tune-label">Extension min <span id="ext-val">1.22</span>
+            <input type="range" id="tune-ext" min="0.6" max="2.0" step="0.01" value="1.22" />
+          </label>
+          <label class="tune-label">Elbow angle min <span id="ang-val">145</span>°
+            <input type="range" id="tune-ang" min="90" max="175" step="1" value="145" />
+          </label>
+        </div>
+      </aside>
+
+      <!-- Video / canvas area -->
+      <section id="video-section">
+        <div id="canvas-wrapper">
+          <video id="video" playsinline autoplay muted></video>
+          <canvas id="canvas"></canvas>
+
+          <!-- Overlay event flash -->
+          <div id="punch-flash" class="punch-flash"></div>
+          <div id="event-label" class="event-label"></div>
+
+          <!-- Loading / placeholder overlay -->
+          <div id="overlay" class="overlay">
+            <div class="overlay-content">
+              <div class="overlay-icon">🥊</div>
+              <h2>Shadow Boxing Tracker</h2>
+              <p>Click <strong>Start Camera</strong> to begin your session.<br/>Allow webcam access when prompted.</p>
+              <button id="btn-start-center" class="btn btn-primary btn-large">▶ Start Session</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status bar -->
+        <div id="status-bar">
+          <span id="status-text">Ready — click Start Camera</span>
+          <span id="pose-indicator" class="pose-indicator off">● Pose</span>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MediaPipe CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
+
+  <script src="app.js"></script>
+</body>
+</html>

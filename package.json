@@ -1,0 +1,12 @@
+{
+  "name": "shadow-boxing-tracker",
+  "version": "1.0.0",
+  "description": "Shadow boxing punch detector using MediaPipe Pose JS",
+  "scripts": {
+    "start": "npx --yes serve . -l 3000",
+    "dev": "npx --yes serve . -l 3000"
+  },
+  "keywords": ["mediapipe", "pose", "shadow-boxing", "webcam"],
+  "author": "nikhilgupta-dev-bit",
+  "license": "MIT"
+}

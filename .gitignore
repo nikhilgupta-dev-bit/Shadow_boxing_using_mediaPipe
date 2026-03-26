@@ -1,4 +1,23 @@
+# Python
 venv/
 __pycache__/
 *.pyc
+*.pyo
+
+# macOS
 .DS_Store
+
+# Node
+node_modules/
+
+# Large media & document files
+*.mp4
+*.mov
+*.avi
+*.pdf
+*.pptx
+*.docx
+*.zip
+
+# Screenshots
+Screenshot*.png
